@@ -1,0 +1,275 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+  <!-- View tree -->
+  <record id="folder_model_view_tree" model="ir.ui.view">
+    <field name="name">folder.model.view.tree</field>
+    <field name="model">folder.model</field>
+    <field name="arch" type="xml">
+      <tree string="Dossier"
+            decoration-info="state == 'in_progress'"
+            decoration-success="state == 'complete'" 
+            decoration-danger="state == 'terminated'"
+            decoration-muted="state == 'draft'">
+        <field name="state" invisible="1" />
+        <field name="folder_number"/>
+        <field name="date" />
+        <field name="responsible" />
+        <field name="partner_id" />
+        <field name="type_freight" />
+        <field name="freight_mode" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- Action -->
+  <record id="folder_model_action" model="ir.actions.act_window">
+    <field name="name">Dossiers</field>
+    <field name="res_model">folder.model</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="folder_model_view_tree"/>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+        Crée le premier Dossier
+      </p>
+    </field>
+  </record>
+
+
+  <!-- View tree report complete -->
+  <record id="folder_model_report_view_tree" model="ir.ui.view">
+    <field name="name">folder.model.report.view.tree</field>
+    <field name="model">folder.model</field>
+    <field name="arch" type="xml">
+      <tree string="Dossier">
+        <field name="folder_number" />
+        <field name="ref_ot_client" />
+        <field name="eta_date" />
+        <field name="date" string="Date Manifeste" />
+        <field name="tc_ids" string="Nombre TC" widget="many2many_tags" options="{'color_field': 'color'}"/>
+        <field name="missing_doc" />
+        <field name="observations" />
+        <field name="historical" />
+        <field name="goods" />
+        <field name="dau_number" />
+        <field name="date_dau" />
+      </tree>
+    </field>
+  </record>
+
+  <!-- View form -->
+  <record id="folder_model_view_form" model="ir.ui.view">
+    <field name="name">folder.model.view.form</field>
+    <field name="model">folder.model</field>
+    <field name="arch" type="xml">
+      <form string="Dossier">
+        <header>
+          <button string="Confirmer" confirm="Vous voulez vraiment confirmer?" name="action_confirm" type="object" class="bg_blue_btn text-light" attrs="{'invisible': ['|',('state', '=', 'terminated'),('state','=','in_progress')]}"/>
+          <button string="Annuler" confirm="Vous voulez vraiment annuler?" name="action_cancel" type="object" class="bg-light text-danger" attrs="{'invisible': ['|',('state', '=', 'terminated'),('state','=','in_progress')]}"/>
+          <button string="brouillon" confirm="Vous voulez vraiment mettre en brouillon?" name="action_brouillon" type="object" class="bg_blue_btn text-light" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+          <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,complete,terminated" />
+        </header>
+        <div class="alert alert-warning text-center o_form_header my-2 custom_alert_warning" role="status" attrs="{'invisible': [('is_fifteen', '=', False)]}">
+            <div>
+                <field name="is_fifteen" invisible="1"/>
+                <strong>
+                  Il vous reste <field name="days_left"/> jours.
+                </strong>
+            </div></div>
+        <sheet>
+          <div name="button_box" position="inside">
+            <button name="action_show_invoice_link" class="oe_stat_button custom_button_stat" icon="fa-book" type="object" string="Facture">
+              <div class="o_form_field o_stat_info">
+                <span class="o_stat_text fw-bolder">Facture</span>
+              </div>
+            </button>
+            <button name="action_show_cession_link" class="oe_stat_button custom_button_stat" icon="fa-book" type="object" string="Cession">
+              <div class="o_form_field o_stat_info">
+                  <span class="o_stat_value">
+                    <field name="cession_count" class="fw-bolder" /> 
+                  </span>
+                  <span class="o_stat_text fw-bolder">Cession</span>
+              </div>
+            </button>
+            <button name="action_show_regul_link" class="oe_stat_button custom_button_stat" icon="fa-book" type="object" string="Regul" >
+              <div class="o_form_field o_stat_info">
+                <span class="o_stat_value">
+                  <field name="regul_count" class="fw-bolder" /> 
+                </span>
+                <span class="o_stat_text fw-bolder">Regul</span>
+              </div>
+            </button>
+            <button name="action_show_dhl_link" class="oe_stat_button custom_button_stat" icon="fa-book" type="object" string="DHL">
+              <div class="o_form_field o_stat_info">
+                <span class="o_stat_value">
+                  <field name="dhl_count"  class="fw-bolder" /> 
+                </span>
+                <span class="o_stat_text fw-bolder">DHL</span>
+              </div>
+            </button>
+          </div>
+          <h2 class="text-center bg_blue_f w-100 fw-bolder border py-2 mb-5">
+            <field class="text-light" name="title_type_freight" readonly="1" />
+          </h2>
+          <group>
+            <group>
+              <field name="folder_number" placeholder="N° du dossier" class="bg_blue border  fs-3 fw-bold" attrs="{'readonly':[('state','!=','draft')]}" />
+              <field name="date" class="text-black border" attrs="{'readonly':[('state','!=','draft')]}"/>
+              <field name="responsible"  class="border" attrs="{'readonly':[('state','!=','draft')]}"/>
+              <field name="partner_id" options="{'no_create': True}" placeholder="Ex : James" class="border" attrs="{'readonly':[('state','!=','draft')]}"/>
+              <field name="ref_ot_client"  class="border" attrs="{'readonly':[('state','!=','draft')]}"/>
+              <field name="eta_date" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','export')]}" class=" bg_attr_visible"/>
+              <field name="collection_date" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','export')]}" class=" bg_attr_visible" />
+              <field name="etd_date" class="border bg_attr_visible" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','import')]}"/>
+              <field name="potting_date" class="border bg_attr_visible" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','import')]}" />
+              <field name="potting_place" class="border bg_attr_visible" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','import')]}" />
+              <field name="destination" class="border bg_attr_visible" attrs="{'invisible': ['|',('type_freight', '=', False),('freight_mode','=','import')]}" />
+              <field name="end_of_shipping_franchise"  class="border"/>
+              <field name="end_of_demurrage_exemption"  class="border"/>
+              <field name="is_complete" widget="boolean_toggle" force_save="1" />
+              <!-- <field name="invoice_number" /> -->
+            </group>
+            <group>
+              <field name="type_freight"  class="border bg-light" attrs="{'readonly':[('state','!=','draft')]}"/>
+              <field name="freight_mode"  class="border" attrs="{'readonly':[('state','!=','draft')]}" />
+              <field name="type_m_se" class=" bg_attr_visible" attrs="{'invisible': [('type_freight', '!=', 'maritime')]}"/>
+              <field name="container_twenty" class="bg_attr_visible" attrs="{'invisible': ['|', ('type_m_se', '=', 'grouping'), ('type_m_se', '=', False)]}" />
+              <field name="container_fourty" class=" bg_attr_visible" attrs="{'invisible': ['|', ('type_m_se', '=', 'grouping'), ('type_m_se', '=', False)]}"/>
+              <field name="container_total" class="fw-bolder pl-2 bg_attr_visible" attrs="{'invisible': ['|', ('container_twenty', '=', False), ('container_fourty', '=', False)]}"/>
+              <field name="ship" class="bg_attr_visible" attrs="{'invisible': ['|', ('type_m_se', '=', 'grouping'), ('type_m_se', '=', False)]}" />
+              <field name="tc_ids" string="Nombre TC" widget="many2many_tags" options="{'color_field': 'color'}" class="bg_attr_visible" attrs="{'invisible': ['|', ('type_m_se', '=', 'grouping'), ('type_m_se', '=', False)]}" />
+              <label for="weight"/>
+              <div class="o_row bg_attr_visible">
+                  <field name="weight" class="oe_inline"/>
+                  <span>Kg</span>
+              </div>
+              <label for="volume"/>
+              <div class="o_row bg_attr_visible mb-5">
+                  <field name="volume" class="oe_inline"/>
+                  <span>m³</span>
+              </div>
+              <field name="date_manifest" class="border" />
+              <field name="effective_payment_date" class="border" />
+              <field name="case_freight"  class="border" />
+              <field name="case_franchise"  class="border" />
+              <field name="case_transport" class="border" />
+              <field name="air_consolidation" attrs="{'invisible': [('type_freight', '!=', 'air')]}" class=" bg_attr_visible" />
+              <field name="num_blta"  attrs="{'invisible': [('type_freight', '=', False)]}" class=" bg_attr_visible" />
+              <field name="num_hwb" attrs="{'invisible': [('type_freight', '=', False)]}" class=" bg_attr_visible" />
+              <field name="n_plomb"  class="border" />
+            </group>
+          </group>
+          <notebook>
+            <page string="Informations">
+              <group>
+                <group string="Informations" class="text-inf bordero">
+                    <field name="folder_reference" class="border"/>
+                    <field name="num_bsc" class="text-dark border"/>
+                    <field name="submission" class="text-dark border"/>
+                    <field name="midac_authorization" class="text-dark border"/>
+                    <field name="delivery_place" class="text-dark border"/>
+                    <field name="check_number_provision" class="text-dark border"/>
+                    <field name="agio" class="text-dark border"/>
+                    <field name="num_dau_mb" class="text-dark border"/>
+                    <field name="circuit_imb" class="text-dark border"/>
+                </group>
+                <group>
+                  <field name="submission_date_depot" class="border" />
+                  <field name="submission_date_depot_end" class="border" />
+                  <field name="submission_date" class="border" />
+                  <field name="delivery_date" class="border" />
+                  <field name="date_sending_doc_tmm" class="border" />
+                  <field name="due_date" class="border" />
+                </group>
+              </group>
+            </page>
+            <page string="Informations de paiement">
+              <group>
+                <group>
+                  <field name="dau_number"  class="border"/>
+                  <field name="date_dau"  class="border"/>
+                  <field name="date_filing_declaration" class="border" />
+                  <field name="circuit_cs" class="text-dark border"/>
+                  <field name="payment_order" class="text-dark border"/>
+                  <field name="payment_date" class="border" />
+                </group>
+                <group>
+                  <field name="currency_id" invisible="1" />
+                  <field name="provision" class="text-dark border" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                  <field name="provision_ot" class="text-dark border" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                  <field name="check_number" class="text-dark border" />
+                  <field name="payment_info" class="text-dark border" />
+                </group>
+              </group>
+            </page>
+            <page string="Détails">
+              <group>
+                  <field name="missing_doc" class="bg_doc_detail" />
+                  <field name="goods" class="bg_doc_detail" />
+                  <field name="observations" class="bg_doc_detail" />
+                  <field name="historical" class="bg_doc_detail" />
+              </group>
+              <div>
+                <field name="doc_line_ids">
+                  <tree editable="bottom">
+                    <field name="doc" filename="name"/>
+                  </tree>
+                </field>
+              </div>
+            </page>
+            <page string="Pièces Jointes">
+              <group>
+                <field name="import_export_invoice_doc" class="w-25" />
+                <field name="packing_doc" class="w-25"  />
+                <field name="bsc_doc" class="w-25"  />
+                <field name="bl_doc" class="w-25"  />
+                <field name="ot_doc" class="w-25"  />
+                <field name="domiciliation_doc" class="w-25"  />
+                <field name="autorisation_doc" class="w-25"  />
+                <field name="midac_doc" class="w-25"  />
+              </group>
+              <h4 class="text-start fw-bolder mt-5 text-decoration-underline">Ajouter Plus de documents</h4>
+              <div>
+                <field name="attachement_line_ids">
+                  <tree editable="bottom">
+                    <field name="attachement_type" />
+                    <field name="attachement_name" />
+                    <field name="attachement" filename="name"/>
+                  </tree>
+                </field>
+              </div>
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- view search -->
+  <record id="folder_model_view_search" model="ir.ui.view">
+    <field name="name">folder.model.view.search</field>
+    <field name="model">folder.model</field>
+    <field name="arch" type="xml">
+      <search string="Filtre Dossier">
+        <field name="folder_number" />
+        <field name="partner_id" />
+        <filter domain="[('state', '=', 'draft')]" name="state"  string="Etat Brouillons"/>
+        <filter domain="[('state', '=', 'in_progress')]" name="state"  string="Etat En Cours"/>
+        <filter domain="[('state', '=', 'complete')]" name="state"  string="Etat Complets"/>
+        <filter domain="[('state', '=', 'terminated')]" name="state"  string="Etat Résiliés"/>
+        <filter domain="[('tc_ids', '!=', False)]" name="tc_ids"  string="TC"/>
+        <filter domain="[('type_m_se', '=', 'container')]" name="type_m_se"  string="Conteneur"/>
+        <filter domain="[('type_m_se', '=', 'grouping')]" name="type_m_se"  string="Groupage"/>
+        <filter domain="[('date_dau', '!=', False)]" name="date_dau"  string="Date DAU"/>
+        <filter domain="[('dau_number', '!=', False)]" name="dau_number"  string="N° DAU"/>
+        <filter domain="[('ref_ot_client', '!=', False)]" name="ref_ot_client"  string="OT Client"/>
+        <group expand="1" string="Group By">
+          <filter string="TC" name='tc_ids' context="{'group_by':'tc_ids'}"/>
+          <filter string="Client" name='partner_id' context="{'group_by':'partner_id'}"/>
+          <filter string="OT Client" name='ref_ot_client' context="{'group_by':'ref_ot_client'}"/>
+      </group>
+      </search>
+    </field>
+  </record>
+  
+</odoo>

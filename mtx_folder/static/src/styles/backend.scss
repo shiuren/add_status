@@ -1,0 +1,179 @@
+// Header Odoo
+.o_main_navbar{
+    background-color: #368CE7 !important; 
+}
+.o_field_statusbar > .o_statusbar_status > .o_arrow_button.o_arrow_button_current.disabled{
+    background-color: #368CE7 !important;
+}
+.o_field_statusbar > .o_statusbar_status > .o_arrow_button.o_arrow_button_current.disabled:after, .o_field_statusbar > .o_statusbar_status > .o_arrow_button.o_arrow_button_current.disabled:before{
+    border-left-color: #368CE7 !important;
+}
+// Button
+.btn-primary {
+    background-color: #368CE7;
+    color: #fff;
+    border-color: #d5d5d5;
+}
+.btn-primary:hover {
+    background-color: #2475cc;
+    color: #fff;
+}
+.btn-secondary{
+    background-color: #fff;
+    color: #368CE7;
+    border-color: #ebebeb;
+}
+.btn-secondary:hover{
+    color: #2775c9;
+}
+.btn-link{
+    color: #368CE7;
+}
+.btn-link:hover{
+    color: #232323;
+}
+.btn-outline-primary{
+    color: #368CE7;
+    border-color: #368CE7;
+}
+.btn-outline-primary:hover{
+    color: #fff;
+    background-color: #368CE7;
+}
+.o_back_button a{
+    color: #368CE7;
+}
+
+// Animation Cancel
+.o_form_button_cancel i {
+    transition: transform 0.5s ease; // Ajoute une transition pour une animation fluide
+}
+.o_form_button_cancel i:hover {
+    transform: rotate(-360deg) scale(1.3); // Faites pivoter l'icône de 90 degrés lorsqu'elle est survolée
+}
+a{
+    color: #368CE7;
+}
+.nav-link{
+    color: #368CE7;
+}
+.nav-link:hover{
+    color: #2775c9;
+}
+
+.form-check:hover, .form-check:hover .form-check-input:not(:disabled), .form-select:hover, .form-select:hover .form-check-input:not(:disabled){
+    border-color: #368CE7;
+}
+.form-check-input:checked{
+    background-color: #368CE7;
+}
+
+.o_searchview_facet .o_searchview_facet_label{
+    background-color: #368CE7;
+}
+.o_searchview_facet .o_facet_values{
+    border: #d5d5d5 1px solid;
+}
+.o_filter_menu .dropdown-toggle{
+    color: #368CE7;
+}
+.o_group_by_menu .dropdown-toggle{
+    color: #368CE7;
+}
+.o_favorite_menu .dropdown-toggle{
+    color: #368CE7;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+    background-color: #368CE7;
+    color: #fff;
+    border: solid #368CE7 1px;
+}
+.o_notebook .nav-link{
+    border: solid #368CE7 1px;
+}
+// Save Animation
+@keyframes swing {
+    0% {
+        transform: rotate(0deg) scale(1.3);
+    }
+    50% {
+        transform: rotate(15deg) scale(1.3);
+    }
+    100% {
+        transform: rotate(-15deg) scale(1.3);
+    }
+} 
+.o_form_button_save i:hover {
+    transition: transform 0.3s ease;
+    animation: swing .5s infinite ease-in-out;
+}
+
+// Input search
+.o_searchview_input_container{
+    border: solid 1px #368CE7;
+    border-radius: 10px;
+    padding-left: 5px;
+    margin-bottom: 10px;
+}
+
+
+// View From=================================================================================
+.bg_attr_visible{
+    background-color: #DEECFB;
+    color: #000000;
+    border: #000000 solid 1px;
+}
+.bg_blue{
+    background-color: #7AB3EF;
+    color: #000;
+}
+.bg_blue_f{
+    background-color: #368CE7;
+    color: #fff;
+}
+.bg_blue_btn{
+    background-color: #368CE7;
+    color: #fff;
+}
+.bg_blue_btn:hover{
+    background-color: #0b2f55;
+}
+.bg_doc_detail{
+    background-color: #DEECFB;
+    color: #000000;
+    border: solid 1px #7AB3EF;
+}
+
+
+// Button stat
+.custom_button_stat:hover{
+    background-color: #7AB3EF;
+}
+
+// Atert
+.custom_alert_warning{
+    box-shadow: 0px 3px 8px #c5c5c5;
+}
+
+// Custom view form
+.o_list_renderer .o_list_table thead th:not(.o_list_record_selector){
+    border: solid 1px rgb(115, 115, 115) !important;
+    font-weight: 900;
+    background-color: #368CE7;
+    color: white;
+    text-transform: uppercase;
+}
+
+.o_list_renderer .o_data_row > .o_data_cell{
+    border: solid 1px rgb(115, 115, 115) !important;
+    font-weight: 700;
+}
+
+.o_list_renderer .o_data_row:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.o_list_renderer .o_data_row:nth-child(odd) {
+    background-color: #dee2e6;
+}
+

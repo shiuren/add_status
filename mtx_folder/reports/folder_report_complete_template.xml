@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Template report -->
+    <template id="print_folder_report_complete">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page rounded-1">
+                    <div class="header_report border-bottom border-dark pb-2">
+                        <table class="table_header_report">
+                            <t-head>
+                                <tr>
+                                    <th>
+                                        <t t-foreach="request.env['res.company'].search([])" t-as="img">
+                                            <img class="logo_report" t-if="img.logo" t-attf-src="data:image/png;base64,{{ img.logo.decode('utf-8') }}" alt="logo"/>
+                                        </t>
+                                    </th>
+                                    <th class="header_title">
+                                        <h1>ATI Madagascar</h1>
+                                        <h4>Commissionnaire en douane - commissionnaire de transport</h4>
+                                    </th>
+                                </tr>
+                            </t-head>
+                        </table>
+                    </div>
+                    <h4 class="fw-bolder mt-5 mb-3 pb-1 border-bottom">Rapport Complète</h4>
+                    <div>
+                        <t t-foreach="docs" t-as="doc">
+                            <table class="table_foreach_registration border w-100">
+                                <thead>
+                                    <tr class="p-2">
+                                        <th>Numéro du dossier</th>
+                                        <th>Date manifeste</th>
+                                        <th>Réf OT client</th>
+                                        <th>Eta</th>
+                                        <th>TC</th>
+                                        <th>Document manquants</th>
+                                        <th>Observation</th>
+                                        <th>Historique</th>
+                                        <th>Marchandises</th>
+                                        <th>Numéro DAU</th>
+                                        <th>Date DAU</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.folder_ids" t-as="folder">
+                                        <tr>
+                                            <td><t t-esc="folder.folder_number"/></td>
+                                            <td><t t-esc="folder.date"/></td>
+                                            <td><t t-esc="folder.ref_ot_client"/></td>
+                                            <td><t t-esc="folder.eta_date"/></td>
+                                            <td>
+                                                <ul>
+                                                    <t t-foreach="folder.tc_ids" t-as="x">
+                                                        <li><t t-esc="x.name"/></li>
+                                                    </t>
+                                                </ul>
+                                            </td>
+                                            <td><t t-esc="folder.missing_doc"/></td>
+                                            <td><t t-esc="folder.observations"/></td>
+                                            <td><t t-esc="folder.historical"/></td>
+                                            <td><t t-esc="folder.goods"/></td>
+                                            <td><t t-esc="folder.dau_number"/></td>
+                                            <td><t t-esc="folder.date_dau"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Styles report complete -->
+    <template id="style_report_complete" name="Style Rapport Complete" inherit_id="mtx_folder.print_folder_report_complete">
+        <xpath expr="//div[@class='page rounded-1']" position="before">
+            <style>
+                .logo_report{
+                    width:150px;
+                    height:auto;
+                }
+                .table_header_report h1{
+                    font-size:100px;
+                    font-weight:900;
+                }
+                .table_header_report h4{
+                    text-transform: uppercase;
+                    letter-spacing: 0px;
+                    font-weight:800;
+                }
+                .table_header_report .header_title{
+                    padding-left: 30px;
+                }
+                .table_foreach_registration thead tr th{
+                    border: solid 1px black;
+                    padding:2px;
+                    font-weight:900;
+                    <!-- font-size:16px; -->
+                }
+                .table_foreach_registration tbody tr td{
+                    border: solid 1px black;
+                    padding:2px;
+                    <!-- font-size:14px; -->
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

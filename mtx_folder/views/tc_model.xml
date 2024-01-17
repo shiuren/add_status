@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- Action -->
+    <record id="tc_model_action" model="ir.actions.act_window">
+        <field name="name">TC</field>
+        <field name="res_model">tc.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ajouter un nouveau TC
+            </p>
+        </field>
+    </record>
+
+    <!-- View tree -->
+    <record id="tc_model_view_tree" model="ir.ui.view">
+        <field name="name">tc_model.view.tree</field>
+        <field name="model">tc.model</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    
+    <!-- view form -->
+    <record id="tc_model_view_form" model="ir.ui.view">
+        <field name="name">tc.model.view.form</field>
+        <field name="model">tc.model</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

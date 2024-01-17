@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="folder_model_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page folder-model-report">
+                    <div class="header_report ">
+                        <t t-foreach="docs" t-as="doc">
+                            <div class="report_case_container">
+                                <table class="table_header_report border-bottom  border-dark w-100 mb-2 my-5">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <t t-foreach="request.env['res.company'].search([])" t-as="img">
+                                                    <img class="logo_report" t-if="img.logo" t-attf-src="data:image/png;base64,{{ img.logo.decode('utf-8') }}" alt="logo"/>
+                                                </t>
+                                            </th>
+                                            <th class="header_title">
+                                                <h1>ATI Madagascar</h1>
+                                                <h4>Commissionnaire en douane - commissionnaire de transport</h4>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <h6 class="fw-bolder mb-5">DOSSIER N° : <t t-esc="doc.folder_number"/></h6>
+                                <table class="table_title_before w-100">
+                                    <tbody>
+                                        <tr>
+                                            <td><p>RECEPTION DOCUMENTS</p></td>
+                                            <td><p>REF / OT CLIENT :</p></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table_reception_documents w-100 mb-2">
+                                    <thead>
+                                        <tr>
+                                            <th class="th_client">CLIENT</th>
+                                            <th>NATURE / NOMBRE COLIS</th>
+                                            <th>POIDS / VOLUME</th>
+                                            <th>VALEUR CAF</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><t t-esc="doc.partner_id.name"/></td>
+                                            <td>
+                                                <ul>
+                                                    <t t-if="doc.container_twenty">
+                                                        <li><t t-esc="doc.container_twenty"/></li>
+                                                    </t>
+                                                    <t t-if="doc.container_fourty">
+                                                        <li><t t-esc="doc.container_fourty"/></li>
+                                                    </t>
+                                                    <t t-if="doc.tc_ids">
+                                                        <li>
+                                                                <t t-esc="','.join(doc.tc_ids.mapped('name'))"/>
+                                                        </li>
+                                                    </t>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <ul>
+                                                    <li><t t-esc="doc.weight"/></li>
+                                                    <li><t t-esc="doc.volume"/></li>
+                                                </ul>
+                                            </td>
+                                            <td class="valeur_caf"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>CONTACT : <span class="fw-bolder mt-4"><t t-esc="doc.partner_id.phone"/></span></p>
+                                <table class=" w-100 table_informations_d">
+                                    <tbody>
+                                        <tr>
+                                            <t t-set="type_freight_labels" t-value="{'air': 'Aérien', 'maritime': 'Maritime'}"/>
+                                            <t t-set="get_type_freight_label" t-value="lambda x: type_freight_labels.get(x, '')"/>
+                                            <td>NAVIRE / AVION : <span class="fw-bolder"><t t-esc="get_type_freight_label(doc.type_freight)"/></span></td>
+
+                                            <td>N° DECLARATION : <span class="fw-bolder"><t t-esc="doc.dau_number"/></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <t t-if="doc.eta_date">
+                                                    ETA : 
+                                                </t>
+                                                <t t-else="">
+                                                    ETD : 
+                                                </t>
+                                                <span class="fw-bolder">
+                                                    <t t-if="doc.eta_date">
+                                                        <t t-esc="doc.eta_date"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <t t-esc="doc.etd_date"/>
+                                                    </t>
+                                                </span>
+                                            </td>
+                                            <td>DEPOT DECLARATION : <span class="fw-bolder"><t t-esc="doc.date_filing_declaration"/></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE D'ARRIVEE / DEPART : <span class="fw-bolder"></span></td>
+                                            <td>CIRCUIT : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>N°BL/L / LTA : <span class="fw-bolder"><t t-esc="doc.num_blta"/></span></td>
+                                            <td>ORDRE DE VIREMENT N° : <span class="fw-bolder"><t t-esc="doc.payment_order"/></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>BSC N° : <span class="fw-bolder"><t t-esc="doc.num_bsc"/></span></td>
+                                            <td>MONTANT TAXES : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>HWB N° : <span class="fw-bolder"><t t-esc="doc.num_hwb"/></span></td>
+                                            <td>DD : <span class="fw-bolder"></span></td>
+                                            <td>ARD : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>N° MIDAC : <span class="fw-bolder"><t t-esc="doc.midac_authorization"/></span></td>
+                                            <td>TVA : <span class="fw-bolder"></span></td>
+                                            <td>DAT : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>N° TC : <t t-if="doc.tc_ids">
+                                                            <ul class="fw-bolder">
+                                                                <t t-foreach="doc.tc_ids" t-as="a">
+                                                                    <li>-<t t-esc="a.name"/></li>
+                                                                </t>
+                                                            </ul>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <ul>
+                                                                <li>-</li>
+                                                                <li>-</li>
+                                                                <li>-</li>
+                                                                <li>-</li>
+                                                            </ul>
+                                                        </t>
+                                            </td>
+                                            <td>PG : <span class="fw-bolder"></span></td>
+                                            <td>APFM : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DOC REMIS TMM LE : <span class="fw-bolder"><t t-esc="doc.date_sending_doc_tmm"/></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE DE DEPOTAGE : <span class="fw-bolder"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE D'ENLEVEMENT : <span class="fw-bolder"><t t-esc="doc.collection_date"/></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>DATE ET LIEU DE LIVRAISON : 
+                                                <span class="fw-bolder">
+                                                    <t t-esc="doc.delivery_date"/> / <t t-esc="doc.delivery_place"/>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="position-relative">
+                                    <table class=" table_observations w-50 p-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">OBSERVATIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <ul>
+                                                        <li>PROVISION CLIENT : <span class="fw-bolder"><t t-esc="doc.provision"/></span></li>
+                                                        <li>AGIO : <span class="fw-bolder"><t t-esc="doc.agio"/></span></li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <ul>
+                                                        <li>Doc soumission : <span class="fw-bolder"><t t-esc="doc.submission"/></span></li>
+                                                        <li>Date regul soumisson : <span class="fw-bolder"><t t-esc="doc.submission_date"/></span></li>
+                                                        <li>Transporteur : <span class="fw-bolder"></span></li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class=" table_hh_right w-50 p-0 ">
+                                        <table class="table_historical w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">HISTORIQUE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="not_show">text not show</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="table_missing_doc w-100">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">DOCUMENTS MANQUANTS</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <tr>
+                                                            <td class="not_show_x">text not show</td>
+                                                        </tr>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Styles report folder number -->
+    <template id="style_report_folder_model" name="Style Rapport Dossier" inherit_id="mtx_folder.folder_model_report_template">
+        <xpath expr="//div[@class='page folder-model-report']" position="before">
+            <style>
+                .report_case_container{
+                    font-family: arial;
+                }
+                .logo_report{
+                    width:150px;
+                    height:auto;
+                }
+                .table_header_report h1{
+                    font-size:70px;
+                    font-weight:900;
+                }
+                .table_header_report h4{
+                    text-transform: uppercase;
+                    letter-spacing: 0px;
+                    font-weight:800;
+                    font-size:18px;
+                }
+                .table_header_report .header_title{
+                    padding-left: 30px;
+                }
+                .table_reception_documents thead tr th{
+                    border: solid black 1px;
+                    text-align: center;
+                }
+                .table_reception_documents tbody tr td{
+                    border: solid black 1px;
+                    padding: 30px 0;
+                    padding: 10px;
+                }
+                .th_client{
+                    width: 350px;
+                }
+                .table_informations_d ul li{
+                    list-style: none;
+                }
+                .table_informations_d tr td{
+                    padding:8px 0; 
+                }
+                .table_observations{
+                    border: solid black 1px;
+                }
+                .table_observations tr{
+                    border: solid black 1px;
+                }
+                .table_observations tr ul li{
+                    margin: 8px 0;
+                    list-style: none;
+                }
+                .table_historical tr{
+                    border: solid black 1px;
+                }
+                .table_historical tr td{
+                    height: auto;
+                }
+                .table_historical tr ul li, .table_missing_doc tr ul li{
+                    list-style: none;
+                }
+                .table_hh_right{
+                    position: absolute;
+                    top: -180px;
+                    right: 0;
+                }
+                .table_missing_doc tr td{
+                    height: auto;
+                }
+                .table_missing_doc tr{
+                    border: solid black 1px;
+                }
+                .not_show{
+                    padding-bottom: 240px;
+                    color: #fff;
+                }
+                .not_show_x{
+                    padding-bottom: 62px;
+                    color: #fff;
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

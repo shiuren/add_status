@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- paper format folder model -->
+        <record id="paperformat_folder_model_report" model="report.paperformat">
+            <field name="name">Paperformat Rapport Dossier</field>
+            <field name="default" eval="False"/>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="dpi">96</field>
+        </record>
+
+        <!-- report action -->
+        <record id="folder_report" model="ir.actions.report">
+            <field name="name">Impression Dossier</field>
+            <field name="model">folder.model</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mtx_folder.folder_model_report_template</field>
+            <field name="report_file">mtx_folder.folder_model_report_template</field>
+            <field name="binding_model_id" ref="model_folder_model"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_folder_model_report"/>
+        </record>
+    </data>
+</odoo>

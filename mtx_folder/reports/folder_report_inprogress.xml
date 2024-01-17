@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <!-- paper format -->
+    <record id="paperformat_folder_report_inprogress" model="report.paperformat">
+        <field name="name">Paperformat Rapport En cours</field>
+        <field name="default" eval="False"/>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="dpi">96</field>
+    </record>
+    <!-- Action Report Complète-->
+    <record id="print_folder_report_inprogress_pdf" model="ir.actions.report">
+        <field name="name">Report En cours</field>
+        <field name="model">folder.report.inprogress</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mtx_folder.print_folder_report_inprogress</field>
+        <field name="report_file">mtx_folder.print_folder_report_inprogress</field>
+        <field name="binding_model_id" ref="mtx_folder.model_folder_report_inprogress"/>
+        <field name="print_report_name">(object.partner_id.name)</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_folder_report_inprogress"/>
+    </record>
+
+    <!-- View form wizard -->
+    <record id="folder_report_inprogress_view_form" model="ir.ui.view">
+        <field name="name">folder.report.inprogress.view.form</field>
+        <field name="model">folder.report.inprogress</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="adress" />
+                        </group>
+                        <group>
+                            <field name="date_from" />
+                            <field name="date_end" />
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="CHERCHER " name="get_report_folder_progress" type="object" class="oe_highlight" data-hotkey="A"
+                        attrs="{'invisible': ['|',('partner_id', '=', False), ('date_end', '=', False)]}"/>
+                    <button string="Imprimer" name="do_report_folder_inprogress" type="object" class="oe_highlight" data-hotkey="q"
+                        attrs="{'invisible': ['|',('partner_id', '=', False), ('date_end', '=', False)]}"/>
+                    <button string="Annuler" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="folder_report_inprogress_action" model="ir.actions.act_window">
+        <field name="name">Rapport En Cours</field>
+        <field name="res_model">folder.report.inprogress</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
